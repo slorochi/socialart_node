@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     Comments.associate = (models) => {
         Comments.belongsTo(models.Users,{});
         Comments.belongsTo(models.Posts,{});
-        Comments.belongsToMany(models.Users,{ through:'CommentsLiked'});
+        Comments.belongsToMany(models.Users,{ through:'comments_liked'});
 
     }
     return Comments;

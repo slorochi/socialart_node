@@ -22,8 +22,8 @@ module.exports = (sequelize, DataTypes) => {
         Users.hasMany(models.Files,{});
         Users.hasMany(models.Comments,{});
         Users.hasMany(models.Posts,{});
-        Users.belongsToMany(models.Posts,{ through:'PostsLiked'});
-        Users.belongsToMany(models.Comments,{ through:'CommentsLiked'});
+        Users.belongsToMany(models.Posts,{ through:'posts_liked'});
+        Users.belongsToMany(models.Comments,{ through:'comments_liked'});
 
     }
     return Users;
