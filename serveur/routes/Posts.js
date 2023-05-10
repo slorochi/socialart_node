@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const { Posts } = require("../models");
 
 router.get("/",async (req,res)=>{
-    res.send("hi");
     const listOfPosts = await Posts.findAll();
     res.status(200).json(listOfPosts);
 });
