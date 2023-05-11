@@ -28,7 +28,13 @@ router.get('/getcookie', (req, res) => {
 // create user
 router.post("/signup", async(req,res)=>{
     const post = req.body;
-    await Users.create(post);
+    const u = await Users.create(post);
+    // #todo : or find one here
+    const token = jwt.sign(u.toJSON(), JWT_SECRET_KEY, { expiresIn: "1h"});
+        res.cookie('remember', {email:req.body.email, token:token},{httpOnly: true, 
+            sameSite: 'strict',
+            maxAge: 3600 * 24 * 30}) // 30 days);
+        res.status(200).json('Cookie have been saved successfully');
     res.status(200).json("create user");
 });
 
@@ -43,8 +49,10 @@ router.post("/login", async(req,res)=>{
     console.log(userToLogin);
     if (userToLogin){
         const token = jwt.sign(userToLogin.toJSON(), JWT_SECRET_KEY, { expiresIn: "1h"});
-        res.cookie(`Cookie_token_name`,{email:req.body.email, token:token});
-        res.send('Cookie have been saved successfully');
+        res.cookie('remember', {email:req.body.email, token:token},{httpOnly: true, 
+            sameSite: 'strict',
+            maxAge: 3600 * 24 * 30}) // 30 days);
+        res.status(200).json('Cookie have been saved successfully');
     }
     else{
         res.status(401).json("No users found.")

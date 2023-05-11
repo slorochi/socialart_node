@@ -9,15 +9,15 @@ const axiosInstance = axios.create({
 })
 export default function LoginForm(){
 
-  const { setIsAuthenticated } = useContext(AuthContext);
-  const {isAuthenticated } = useContext(AuthContext);
+  const { setUserAuthenticated } = useContext(AuthContext);
+  const {userAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const onFinish = (values) => {
     console.log('Success:', values);
     axiosInstance.post("http://localhost:3001/users/login", values).then((resp)=>{
       console.log(resp);
-      setIsAuthenticated(true);
+      setUserAuthenticated(values.email);
       navigate("/profile"); 
     }).catch((err)=>{
       console.log(err);

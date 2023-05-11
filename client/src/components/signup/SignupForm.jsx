@@ -6,15 +6,16 @@ import { AuthContext } from '../../contexts/AuthContext';
 
 export default function SignupForm(){
 
-  const {setIsAuthenticated} = useContext(AuthContext);
+  const {setUserAuthenticated} = useContext(AuthContext);
   const {isAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
+
   const onFinish = (values) => {
     console.log('Success:', values);
 
     axios.post("http://localhost:3001/users/signup",values).then((resp)=>{
       console.log(resp);
-      setIsAuthenticated(true);
+      setUserAuthenticated(values.email);
       navigate("/profile"); 
     }).catch((err)=>{
       console.log(err);
