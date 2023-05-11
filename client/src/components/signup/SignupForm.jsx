@@ -1,12 +1,21 @@
 import { Button, Form, Input, } from 'antd';
 import axios from 'axios';
+import React, { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../contexts/AuthContext';
 
 export default function SignupForm(){
 
-const onFinish = (values) => {
+  const {setIsAuthenticated} = useContext(AuthContext);
+  const {isAuthenticated } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const onFinish = (values) => {
     console.log('Success:', values);
+
     axios.post("http://localhost:3001/users/signup",values).then((resp)=>{
-      console.log(resp)
+      console.log(resp);
+      setIsAuthenticated(true);
+      navigate("/profile"); 
     }).catch((err)=>{
       console.log(err);
     })

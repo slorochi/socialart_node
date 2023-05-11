@@ -1,15 +1,23 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
   const { isAuthenticated } = useContext(AuthContext);
   console.log(isAuthenticated);
+  const navigate = useNavigate();
+  const redirectToLogin = ()=>{
+    navigate("/login");
+  }
+  useEffect(()=>{
+    if(!isAuthenticated){
+      navigate("/login");
+    }
+  })
   return (
     <div>
-      {isAuthenticated ? (
+      {isAuthenticated ?? (
         <p>Bienvenue sur votre profil</p>
-      ) : (
-        <p>Veuillez vous connecter pour accéder à cette page</p>
       )}
     </div>
   );
