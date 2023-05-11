@@ -21,6 +21,9 @@ library.add(faHome, faHeart, faUser, );
 
 function App(){
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const handleSearch =(e)=>{
+      console.log(e.target.value);
+    }
     useEffect(() => {
       console.log(isAuthenticated);
       
@@ -28,10 +31,14 @@ function App(){
   return (
     <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
     <BrowserRouter className="">
+      <header className="h-[60px] w-screen px-10 flex items-center justify-between">
     <Link className="font-semibold text-zinc-600	 text-4xl mb-8" to='/'>Social Art</Link>
-    <div className=" font-bold flex"><Link to='login' className="py-1.5 px-2.5 text-white rounded w-30 bg-indigo-600"><FontAwesomeIcon className="mr-2" icon="user"/>Connexion</Link>
-    <Link to='signup' className="py-1.5 px-2.5  rounded w-30 text-indigo-600">Inscription</Link></div>
-    
+    <input type="search" placeholder="Rechercher" className="searchInput" onChange={(e)=>{handleSearch(e)}}/>
+      { !isAuthenticated ?     <div className=" font-bold flex">
+<Link to='login' className="py-1.5 px-2.5 text-white h-10 rounded w-30 bg-indigo-600 flex items-center hover:bg-indigo-700"><FontAwesomeIcon className="mr-2" icon="user"/>Connexion</Link>
+      <Link to='signup' className="py-1.5 px-2.5  rounded w-30 text-indigo-600 flex items-center">Inscription</Link></div>
+    :  <Link to='signout' className="py-1.5 px-2.5 text-white rounded w-30 bg-indigo-600 flex items-center hover:bg-indigo-700"><FontAwesomeIcon className="mr-2" icon="user"/>Déconnexion</Link>}
+    </header>
     <Routes>
       <Route path='/' element={<Home/>} />
       <Route path='/login' element={<Login/>}/>
