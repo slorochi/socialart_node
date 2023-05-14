@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull:true,
 
         }
+        // # add bannner and pdp from user = here :)
     })
     Users.associate = (models) => {
         Users.hasMany(models.Files,{});

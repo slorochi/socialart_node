@@ -1,33 +1,35 @@
 import { Button, Form, Input, } from 'antd';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import React, { useContext } from 'react';
-import { AuthContext } from '../../contexts/AuthContext';
+import React from 'react';
+
+// icons
+import { ImMail2, ImLock} from "react-icons/im";
+
 // allow to send cookies
 const axiosInstance = axios.create({
   withCredentials: true
 })
-export default function LoginForm(){
+export default function LoginForm({setTriggerUserConnexion, navigate}){
 
-  const { setUserAuthenticated } = useContext(AuthContext);
-  const {userAuthenticated } = useContext(AuthContext);
-  const navigate = useNavigate();
+
 
   const onFinish = (values) => {
     console.log('Success:', values);
     axiosInstance.post("http://localhost:3001/users/login", values).then((resp)=>{
       console.log(resp);
-      setUserAuthenticated(values.email);
+      setTriggerUserConnexion(!false);
       navigate("/profile"); 
     }).catch((err)=>{
       console.log(err);
     }) 
   };
   
+    
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
   };
   return (
+
     <div style={{display:'flex', justifyContent:'center'}}>
     <Form
     style={{width:'600px', marginTop:'20px'}}
@@ -52,7 +54,12 @@ export default function LoginForm(){
             message: "Saisissez votre email.",
             },
         ]}
-        label="adresse email"
+        label={
+          <>
+            <ImMail2 style={{ marginRight: '8px' }} />
+            Adresse email
+          </>
+        }
         name="email"
         
       >
@@ -66,7 +73,12 @@ export default function LoginForm(){
             message: 'Renseignez votre mot de passe.',
             },
         ]}
-        label="mot de passe"
+        label={
+          <>
+            <ImLock style={{ marginRight: '8px' }} />
+            Mot de passe
+          </>
+        }
         name="password"
         
       >
@@ -74,10 +86,13 @@ export default function LoginForm(){
 
       </Form.Item>
 
-      
+        {/* centre le bouton */}
+      <div className="flex justify-center">
+
       <Button type="submit" className="py-1.5 px-2.5 inline-flex items-center text-white rounded w-30 bg-indigo-600 hover:bg-indigo-500" htmlType="submit">
           Connexion
         </Button>
+        </div>
     </Form>
     </div>
   );

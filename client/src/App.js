@@ -1,13 +1,12 @@
 import "./App.css";
 import React, {useState, useEffect} from 'react'
-import {BrowserRouter, Link, Route, Routes} from "react-router-dom";
+import {BrowserRouter, Link, Route, Routes, Redirect} from "react-router-dom";
  
 
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faHome, faHeart, faUser } from '@fortawesome/free-solid-svg-icons';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // authContext
 import { AuthContext } from "./contexts/AuthContext";
 import Navbar from "./components/Navbar.jsx";
@@ -20,26 +19,36 @@ library.add(faHome, faHeart, faUser, );
 
 
 function App(){
-    const [userAuthenticated, setUserAuthenticated] = useState();
-    const handleSearch =(e)=>{
-      console.log(e.target.value);
-    }
+    const [userAuthenticated, setUserAuthenticated] = useState(null);
+    const [triggerUserConnexion, setTriggerUserConnexion] = useState(false);
+
     useEffect(() => {
       console.log(userAuthenticated);
-      
-      axios.get("http://localhost:3001/users/getcookie").then((resp)=>{})
-    },[userAuthenticated])
+      axios.get("http://localhost:3001/users/getcookie", { withCredentials: true }).then((resp)=>{
+        console.log(resp.data);
+        let cookies = resp.data;
+        // recherche l'utilsateur correspondant au cookie
+        if(cookies){
+          axios.get(`http://localhost:3001/users/byEmail/${cookies.email}`).then((response)=>{
+            let userAuthInfos = response.data;
+            userAuthInfos.token = cookies.token;
+            setUserAuthenticated(userAuthInfos);
+          })
+        }
+      })
+    },[triggerUserConnexion])
   return (
-    <AuthContext.Provider value={{ userAuthenticated, setUserAuthenticated }}>
+    <AuthContext.Provider value={{ userAuthenticated, setUserAuthenticated, triggerUserConnexion, setTriggerUserConnexion}}>
     <BrowserRouter className="">
-      <header className="h-[60px] w-screen px-10 flex items-center justify-between">
+      <Navbar />
+     {/*  <header className="h-[60px] w-screen px-10 flex items-center justify-between">
     <Link className="font-semibold text-zinc-600	 text-4xl h-10  mb-0" to='/'>Social Art</Link>
     <input type="search" placeholder="Rechercher" className="searchInput" onChange={(e)=>{handleSearch(e)}}/>
       { !userAuthenticated ?     <div className=" font-bold flex">
 <Link to='login' className="py-1.5 px-2.5 text-white h-10 rounded w-30 bg-indigo-600 flex items-center hover:bg-indigo-700"><FontAwesomeIcon className="mr-2" icon="user"/>Connexion</Link>
       <Link to='signup' className="py-1.5 px-2.5  rounded w-30 text-indigo-600 flex items-center">Inscription</Link></div>
     :  <Link to='signout' className="py-1.5 px-2.5 text-white rounded w-30 bg-indigo-600 flex items-center hover:bg-indigo-700"><FontAwesomeIcon className="mr-2" icon="user"/>Déconnexion</Link>}
-    </header>
+    </header> */}
     <Routes>
       <Route path='/' className="bg-[#E8E6E2]" element={<Home/>} />
       <Route path='/login'  className="bg-[#E8E6E2]" element={<Login/>}/>

@@ -5,13 +5,26 @@ const jwt = require("jsonwebtoken");
 
 const JWT_SECRET_KEY = "poiazertyu19283746";
 console.log(JWT_SECRET_KEY);
-const { Users } = require("../models");
+const { Users, Files } = require("../models");
 
 router.get("/",async (req,res)=>{
-    res.send("hi");
     const listOfUsers = await Users.findAll();
     res.status(200).json(listOfUsers);
 });
+
+// get user by email
+router.get("/byEmail/:mail",async(req,res)=>{
+    const email = req.params.mail;
+    console.log(email);
+    const userdb = await Users.findOne({
+        where: {email:email},
+        attributes:["email","username","bio"],
+        include: Files
+        // include files pour sa profile pic
+    });
+    res.status(200).json(userdb);
+})
+
 
 router.get('/setcookie', (req, res) => {
     res.cookie('remember', "the cookie set to remember user",{httpOnly: true, 
@@ -21,9 +34,9 @@ router.get('/setcookie', (req, res) => {
 });
 
 router.get('/getcookie', (req, res) => {
-    //show the saved cookies
-    console.log(req.cookies)
-    res.send(req.cookies);
+    //send the saved cookies
+    res.send(req.cookies.remember);
+    
 });
 // create user
 router.post("/signup", async(req,res)=>{

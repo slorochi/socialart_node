@@ -1,17 +1,22 @@
 const express = require('express')
 const app = express();
-require('dotenv').config();
+const dotenv = require("dotenv").config();
 const port = process.env.PORT | 3001;
 // #todo: faire marcher le .env
 const cors = require('cors');
 const db = require('./models')
 const cookieParser = require('cookie-parser');
+const http = require('http');
+const server = http.createServer(app);
+const io = require("./utils/socket").initialize(server);
 
 app.use(express.json());
 app.use(cors({
     origin: 'http://localhost:3000',
-    credentials: true
+    credentials: true,
+    optionsSuccessStatus:200,
 }));
+
 app.use(cookieParser());
 // Routers
 const usersApi = require("./routes/Users");
@@ -26,6 +31,5 @@ app.use("/files",filesApi);
 
 db.sequelize.sync().then(()=>{
     app.listen(port, ()=>{console.log("Server listening on " + port)})
-    console.log(process.env.PORT)
 
 })

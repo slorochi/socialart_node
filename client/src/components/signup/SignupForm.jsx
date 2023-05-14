@@ -1,21 +1,22 @@
 import { Button, Form, Input, } from 'antd';
 import axios from 'axios';
-import React, { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../contexts/AuthContext';
+import React from 'react';
 
-export default function SignupForm(){
 
-  const {setUserAuthenticated} = useContext(AuthContext);
-  const {isAuthenticated } = useContext(AuthContext);
-  const navigate = useNavigate();
+// icons
+import { ImMail2, ImLock} from "react-icons/im";
 
+export default function SignupForm({setTriggerUserConnexion, navigate}){
+
+
+
+ 
   const onFinish = (values) => {
     console.log('Success:', values);
 
     axios.post("http://localhost:3001/users/signup",values).then((resp)=>{
       console.log(resp);
-      setUserAuthenticated(values.email);
+      setTriggerUserConnexion(!false);
       navigate("/profile"); 
     }).catch((err)=>{
       console.log(err);
@@ -27,7 +28,9 @@ export default function SignupForm(){
   return (
     <div style={{display:'flex', justifyContent:'center'}}>
     <Form
-    style={{width:'600px', marginTop:'20px'}}
+
+      className='flex flex-col text-center'
+      style={{width:'600px', marginTop:'20px'}}
       name="basic"
       labelCol={{
         span: 6,
@@ -49,7 +52,12 @@ export default function SignupForm(){
             message: "Saisissez votre adresse email.",
             },
         ]}
-        label="adresse mail"
+        label={
+          <>
+            <ImMail2 style={{ marginRight: '8px' }} />
+            Adresse email
+          </>
+        }
         name="email"
         
       >
@@ -63,7 +71,12 @@ export default function SignupForm(){
             message: 'Renseignez votre mot de passe.',
             },
         ]}
-        label="Mot de passe"
+        label={
+          <>
+            <ImLock style={{ marginRight: '8px' }} />
+            Mot de passe
+          </>
+        }
         name="password"
         
       >
@@ -71,10 +84,13 @@ export default function SignupForm(){
 
       </Form.Item>
 
-      
-        <Button type="submit" className="py-1.5 px-2.5 inline-flex items-center text-white rounded w-30 bg-indigo-600 hover:bg-indigo-500" htmlType="submit">
+      <div className="flex justify-center">
+
+        <Button type="submit" className="py-1.5 px-2.5 inline-flex items-center text-white rounded w-30 bg-indigo-600 hover:bg-indigo-500 " htmlType="submit">
           Inscription
         </Button>
+        </div>
+
     </Form>
     </div>
   );

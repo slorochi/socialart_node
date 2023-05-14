@@ -28,7 +28,7 @@ function Home() {
     {
       listOfPosts.length === 0 ?
         <tr>
-          <td colspan="5">no records found</td>
+          <td >no records found</td>
         </tr>
         : listOfPosts.map((value) => {
           <>
