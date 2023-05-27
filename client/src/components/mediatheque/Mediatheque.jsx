@@ -6,7 +6,7 @@ import "./Mediatheque.css";
 import { AuthContext } from '../../contexts/AuthContext';
 
 // icons
-import {MdDownload} from 'react-icons/md'
+import { MdDownload } from 'react-icons/md'
 /* import { SocketContext } from "../utils/socket";
  */
 
@@ -28,11 +28,11 @@ const dropzoneOptions = {
 };
 
 function Mediatheque(
-  
+  props
 ) {
-  const [listOfFiles, setListOfFiles] = useState([]);
-  const [selectedFile, setSelectedFile] = useState(null);
+  const { selectedFile, setSelectedFile, userFile, urlFileChosen, setUrlFileChosen } = props;
 
+  console.log(userFile);
   /* const socket = useContext(SocketContext); */
   const { userAuthenticated } = useContext(AuthContext);
 
@@ -41,116 +41,53 @@ function Mediatheque(
   console.log(userAuthenticated)
 
 
-  useEffect(() => {
-    // afin de ne pas avoir l'id de l'utilisateur dans le context, on utilise l'email:
-    console.log(userAuthenticated.email);
-    let email = userAuthenticated.email
-    axios.get(`http://localhost:3001/files/byUserEmail/${email}`).then((response) => {
-      setListOfFiles(response.data);
-    });
-  }, []);
 
-  const styleInput= {
+
+  const styleInput = {
     position: "absolute",
     marginTop: 3,
     marginLeft: 3,
     height: 1,
     width: 1,
     zIndex: -5,
-}
-  const handleCallClickInput = (e)=>{inputRef.current.click()
+  }
+  const handleCallClickInput = (e) => {
+    inputRef.current.click();
   }
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
+    const reader = new FileReader();
+
+    // L'événement déclenché lorsque la lecture est complète
+    reader.onload = function (e) {
+      console.log(e.target.result);
+      setUrlFileChosen(e.target.result);
+      // On change l'URL de l'image (base64)
+    }
+
+    // On lit le fichier "picture" uploadé
+    reader.readAsDataURL(event.target.files[0])
     console.log(selectedFile);
   };
- /*  const postDropzone = () => {
-    if (!myDropzone.current) {
-      myDropzone.current = new Dropzone(dropzoneRef.current, dropzoneOptions);
-      myDropzone.current.on("success", (file) => {
-        console.log(file);
-        console.log("success");
-        console.log(file);
-        let json = {
-          dztotalchunkcount: file.upload.totalChunkCount,
-          dzuuid: file.upload.uuid,
-          size: file.size,
-          filename: file.name,
-          mime_type: file.type,
-        };
-        axios.post(`http://localhost:3001/files/merge-chunk`, json).then((response) => {
-          console.log(response);
-        });
-      });
-      myDropzone.current.on("error", (err) => {
-        console.log(err);
-      });
-    }
-  };
- */
-  const handleUpload = () => {
-    const formData = new FormData();
-    formData.append('file', selectedFile);
 
-    axios.post('http://localhost:3001/upload', formData)
-      .then((res) => {
-        console.log(res.data);
-        // Traitez la réponse du serveur ici si nécessaire
-      })
-      .catch((err) => {
-        console.error(err);
-        // Gérez les erreurs ici si nécessaire
-      });
-  };
+
   return (
     <>
-     <input style={styleInput} type="file" ref={inputRef} onClick={()=>{console.log("hello")}} onChange={handleFileChange} />
-        <div
-          onClick={handleCallClickInput}
-          className=" h-[50px] rounded-[50px]"
-        ><div className=" btn-slide2 cursor-pointer" > 
+
+      <input style={styleInput} type="file" ref={inputRef} onChange={handleFileChange} />
+      <div
+        onClick={handleCallClickInput}
+        className=" h-[50px] rounded-[50px] mb-4"
+      ><div className=" btn-slide2 cursor-pointer" >
           <span className="circle2 flex items-center justify-center">
-            <MdDownload size={20}/></span><span className="title2">Upload</span>  
+            <MdDownload size={20} /></span><span className="title2">Upload</span>
           <span className="title-hover2">Click here</span>
         </div>
-      
-        </div>
-      <div
-        style={{
-          boxShadow: " 0px 0px 12px -4px rgb(122,122,122)",
-          marginTop: 52,
-          width: "100%",
-          padding: "18px 10px",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          borderRadius: 4,
-        }}
-      >
-       
-        <div
-          className="Mediatheque"
-          style={{
-            overflowY: "auto",
-            width: "100%",
-            justifyContent: "center",
-            display: "flex",
-            flexWrap: "wrap",
-            padding: 8,
-            marginTop: 12,
-            borderRadius: 2,
-            maxHeight: 700,
-            borderTop: "2px solid dodgerblue",
-          }}
-        >
-          {listOfFiles.map((file, key) => {
-            return (
-                <div>{file.name}</div>
-             
-            );
-          })}
-        </div>
+
       </div>
+      {urlFileChosen ? <img src={`${urlFileChosen}`} height="200" width={"auto"} alt="Prévisualisation de l'image…" /> : 
+      <img src={`http://localhost:3001/uploads/${userFile?.name}`} height="200" width={"auto"} alt="Prévisualisation de l'image…" /> }
+     
     </>
   );
 }

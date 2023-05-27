@@ -9,6 +9,10 @@ import { faHome, faHeart, faUser } from '@fortawesome/free-solid-svg-icons';
 
 // authContext
 import { AuthContext } from "./contexts/AuthContext";
+//lib decrypt
+import { decrypt } from "./utils/encrypt";
+
+
 import Navbar from "./components/Navbar.jsx";
 import Profile from "./pages/Profile"
 import Home from "./pages/Home";
@@ -24,19 +28,34 @@ function App(){
 
     useEffect(() => {
       console.log(userAuthenticated);
-      axios.get("http://localhost:3001/users/getcookie", { withCredentials: true }).then((resp)=>{
-        console.log(resp.data);
-        let cookies = resp.data;
-        // recherche l'utilsateur correspondant au cookie
-        if(cookies){
-          axios.get(`http://localhost:3001/users/byEmail/${cookies.email}`).then((response)=>{
-            let userAuthInfos = response.data;
-            userAuthInfos.token = cookies.token;
-            setUserAuthenticated(userAuthInfos);
-          })
-        }
-      })
-    },[triggerUserConnexion])
+      axios
+        .get(`http://localhost:3001/users/getcookie`, {
+          withCredentials: true,
+        })
+        .then((resp) => {
+          console.log(resp);
+          let cookies = resp.data;
+          console.log(cookies);
+          const decryptedCookie = decrypt(cookies);
+          console.log(decryptedCookie);
+          // recherche l'utilsateur correspondant au cookie
+          if (decryptedCookie) {
+            console.log("yess");
+            console.log(decryptedCookie);
+            axios
+              .get(`http://localhost:3001/users/byEmail/${decryptedCookie.email}`)
+              .then((response) => {
+                let userAuthInfos = response.data;
+                userAuthInfos.accessToken = decryptedCookie.accessToken;
+                setUserAuthenticated(userAuthInfos);
+              });
+          }
+        });
+    }, [triggerUserConnexion]);
+  
+
+
+   
   return (
     <AuthContext.Provider value={{ userAuthenticated, setUserAuthenticated, triggerUserConnexion, setTriggerUserConnexion}}>
     <BrowserRouter className="">

@@ -1,92 +1,147 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
+const hashLib = require("../utils/hash");
 const jwt = require("jsonwebtoken");
+const verifyLib = require("../utils/verifyToken");
+const encryptLib = require("../utils/encrypt");
 
 
 const JWT_SECRET_KEY = "poiazertyu19283746";
 console.log(JWT_SECRET_KEY);
+
+const generateAccessToken = (user) => {
+    return jwt.sign({ id: user.id, isAdmin: user.isAdmin }, JWT_SECRET_KEY, {
+        expiresIn: "24h",
+    });
+};
+
+
 const { Users, Files } = require("../models");
 
-router.get("/",async (req,res)=>{
+/* get users */
+router.get("/", async (req, res) => {
     const listOfUsers = await Users.findAll();
     res.status(200).json(listOfUsers);
 });
 
 // get user by email
-router.get("/byEmail/:mail",async(req,res)=>{
+router.get("/byEmail/:mail", async (req, res) => {
     const email = req.params.mail;
     console.log(email);
     const userdb = await Users.findOne({
-        where: {email:email},
-        attributes:["email","username","bio"],
-        include: Files
+        where: { email: email },
+        include: [
+            {
+              model: Files,
+              as: "banner",
+            },
+            {
+              model: Files,
+              as: "profile_pic",
+            },
+          ],
+
         // include files pour sa profile pic
     });
+    console.log(userdb);
     res.status(200).json(userdb);
 })
 
 
-router.get('/setcookie', (req, res) => {
-    res.cookie('remember', "the cookie set to remember user",{httpOnly: true, 
-        sameSite: 'strict',
-        maxAge: 3600 * 24 * 30}) // 30 days);
-    res.send('Cookie have been saved successfully');
-});
 
 router.get('/getcookie', (req, res) => {
     //send the saved cookies
     res.send(req.cookies.remember);
-    
+
 });
 // create user
-router.post("/signup", async(req,res)=>{
-    const post = req.body;
-    const u = await Users.create(post);
-    // #todo : or find one here
-    const token = jwt.sign(u.toJSON(), JWT_SECRET_KEY, { expiresIn: "1h"});
-        res.cookie('remember', {email:req.body.email, token:token},{httpOnly: true, 
-            sameSite: 'strict',
-            maxAge: 3600 * 24 * 30}) // 30 days);
-        res.status(200).json('Cookie have been saved successfully');
-    res.status(200).json("create user");
+router.post("/signup", async (req, res) => {
+    const userInfos = req.body;
+    let admin = true
+    if(!userInfos.admin){
+        admin = false;
+    }
+    userInfos.password = hashLib.hashPwd(userInfos.password);
+    const u = await Users.create(({
+        admin: admin,
+        email: userInfos.email,
+        password: userInfos.password,
+    })
+    );
+    
+    if (u) {
+        // generate acces token
+        const accessToken = generateAccessToken(u);
+        const cookie = {
+            email: u.email,
+            accessToken: accessToken,
+            admin: u.admin
+        };
+        console.log(cookie);
+        // encrypted
+        console.log("user is being finded");
+        const encryptedText = encryptLib.encrypt(cookie);
+        console.log(encryptedText);
+        res.cookie("remember", encryptedText, {
+            maxAge: 3600 * 24 * 30,
+        }); // 30 days)
+        res.status(200).json("user created successfully");
+    }
+    else {
+        res.status(400).json("An error occured while creating user ");
+
+    }
+
 });
 
 // login user
-router.post("/login", async(req,res)=>{
-    const user = req.body;
-    console.log(user);
-    const userToLogin = await Users.findOne({where:{
-        email:req.body.email,
-        password:req.body.password
-    }});
-    console.log(userToLogin);
-    if (userToLogin){
-        const token = jwt.sign(userToLogin.toJSON(), JWT_SECRET_KEY, { expiresIn: "1h"});
-        res.cookie('remember', {email:req.body.email, token:token},{httpOnly: true, 
-            sameSite: 'strict',
-            maxAge: 3600 * 24 * 30}) // 30 days);
-        res.status(200).json('Cookie have been saved successfully');
+router.post("/login", async (req, res) => {
+    const { email, password } = req.body;
+    
+    const hpwd = hashLib.hashPwd(password);
+    const user = await Users.findOne({
+        where: [{ email: email }, { password: hpwd }],
+    });
+    if (user) {
+        // generate acces token
+        const accessToken = generateAccessToken(user);
+        const cookie = {
+            email: email,
+            accessToken: accessToken,
+            admin: user.admin
+        };
+        // encrypted
+
+        const encryptedText = encryptLib.encrypt(cookie);
+        res.cookie("remember", encryptedText, {
+            maxAge: 3600 * 24 * 30,
+        }); // 30 days);
+        res.status(200).json("user logged in successfully");
+
+    } else {
+        res.status(400).json("Username or password incorrect!");
     }
-    else{
-        res.status(401).json("No users found.")
-    } 
 });
 
+
 //modify user infos
-router.put("/:id", async(req,res)=>{
-    const user= req.body;
-    const id = req.params;
-    const userToModify = await Users.findByPk(id);
-    await userToModify.update(user);
-    res.status(200).json("comment modified"); 
+router.put("/:id",  async (req, res) => {
+    const user = req.body;
+    console.log(user);
+    const id = req.params.id;
+    console.log(id);
+    const userModify = await Users.update(user, {
+        where: { id: id },
+      });
+    res.status(200).json("user modified");
 
 })
 
-router.delete("/:id",async(req,res)=>{
+router.delete("/:id",verifyLib.verify, async (req, res) => {
     const id = req.params;
     const userToDelete = await Users.findByPk(id);
     await userToDelete.destroy();
-    res.status(200).json("comment to delete");
+    res.status(200).json("user to delete");
 })
 
 

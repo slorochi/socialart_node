@@ -5,7 +5,9 @@ import React from 'react';
 
 // icons
 import { ImMail2, ImLock} from "react-icons/im";
-
+const axiosInstance = axios.create({
+  withCredentials: true
+})
 export default function SignupForm({setTriggerUserConnexion, navigate}){
 
 
@@ -14,7 +16,7 @@ export default function SignupForm({setTriggerUserConnexion, navigate}){
   const onFinish = (values) => {
     console.log('Success:', values);
 
-    axios.post("http://localhost:3001/users/signup",values).then((resp)=>{
+    axiosInstance.post("http://localhost:3001/users/signup",values).then((resp)=>{
       console.log(resp);
       setTriggerUserConnexion(!false);
       navigate("/profile"); 
