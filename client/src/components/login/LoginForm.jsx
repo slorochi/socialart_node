@@ -1,9 +1,10 @@
 import { Button, Form, Input, } from 'antd';
 import axios from 'axios';
-import React from 'react';
+import React, {useContext} from 'react';
 
 // icons
 import { ImMail2, ImLock} from "react-icons/im";
+import { ThemeContext } from '../../contexts/ThemeContext';
 
 // allow to send cookies
 const axiosInstance = axios.create({
@@ -11,7 +12,7 @@ const axiosInstance = axios.create({
 })
 export default function LoginForm({setTriggerUserConnexion, navigate}){
 
-
+  const { darkMode } = useContext(ThemeContext);
 
   const onFinish = (values) => {
     console.log('Success:', values);
@@ -30,7 +31,7 @@ export default function LoginForm({setTriggerUserConnexion, navigate}){
   };
   return (
 
-    <div style={{display:'flex', justifyContent:'center'}}>
+    <div  style={{display:'flex', justifyContent:'center'}}>
     <Form
     style={{width:'600px', marginTop:'20px'}}
       name="basic"
@@ -46,7 +47,13 @@ export default function LoginForm({setTriggerUserConnexion, navigate}){
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
+      
     >
+      <div className="flex">
+      <div >
+        <ImMail2 style={{ marginRight: '8px' }} />
+            Adresse email
+         </div>  
       <Form.Item
         rules={[
             {
@@ -54,17 +61,15 @@ export default function LoginForm({setTriggerUserConnexion, navigate}){
             message: "Saisissez votre email.",
             },
         ]}
-        label={
-          <>
-            <ImMail2 style={{ marginRight: '8px' }} />
-            Adresse email
-          </>
-        }
+        style={{backgroud:"red",color:"white !important"}}
+       
         name="email"
         
       >
         <Input />
       </Form.Item>
+      
+      </div>
 
       <Form.Item
         rules={[

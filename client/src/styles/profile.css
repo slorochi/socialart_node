@@ -1,0 +1,12 @@
+.darkModal{
+    color:#f1f1f18c !important;
+    background:#23252b !important;
+}
+
+button, [type='button']{
+    background:#b15f5f;
+}
+
+.ant-modal-footer{
+    background:#23252b
+}

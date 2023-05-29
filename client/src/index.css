@@ -10,7 +10,13 @@ body {
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
 }
-
+.dark{
+  background:#23252b;
+  color:rgb(65, 67, 73);
+}
+.light{
+  background: #faf5ed;
+}
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

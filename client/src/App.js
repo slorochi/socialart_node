@@ -7,7 +7,8 @@ import {BrowserRouter, Link, Route, Routes, Redirect} from "react-router-dom";
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faHome, faHeart, faUser } from '@fortawesome/free-solid-svg-icons';
 
-// authContext
+// Contexts
+import { ThemeContext } from "./contexts/ThemeContext";
 import { AuthContext } from "./contexts/AuthContext";
 //lib decrypt
 import { decrypt } from "./utils/encrypt";
@@ -21,8 +22,10 @@ import Signup from "./pages/Signup";
 import axios from "axios";
 library.add(faHome, faHeart, faUser, );
 
+// potential colors: #1c1d24 #f6eedf
 
 function App(){
+    const [darkMode, setDarkMode] = useState(true);
     const [userAuthenticated, setUserAuthenticated] = useState(null);
     const [triggerUserConnexion, setTriggerUserConnexion] = useState(false);
 
@@ -53,10 +56,20 @@ function App(){
         });
     }, [triggerUserConnexion]);
   
+    //dark mode
+    useEffect(()=>{
+      let bodyClass;
+      if(darkMode){
+        bodyClass="dark";
+      }
+      else bodyClass="light";
+      document.body.className = bodyClass;
 
+    },[darkMode])  
 
    
   return (
+    <ThemeContext.Provider value={{darkMode, setDarkMode}}>
     <AuthContext.Provider value={{ userAuthenticated, setUserAuthenticated, triggerUserConnexion, setTriggerUserConnexion}}>
     <BrowserRouter className="">
       <Navbar />
@@ -68,14 +81,14 @@ function App(){
       <Link to='signup' className="py-1.5 px-2.5  rounded w-30 text-indigo-600 flex items-center">Inscription</Link></div>
     :  <Link to='signout' className="py-1.5 px-2.5 text-white rounded w-30 bg-indigo-600 flex items-center hover:bg-indigo-700"><FontAwesomeIcon className="mr-2" icon="user"/>Déconnexion</Link>}
     </header> */}
-    <Routes>
-      <Route path='/' className="bg-[#E8E6E2]" element={<Home/>} />
-      <Route path='/login'  className="bg-[#E8E6E2]" element={<Login/>}/>
-      <Route path='/signup'  className="bg-[#E8E6E2]" element={<Signup/>}/>
-      <Route path="/profile"  className="bg-[#E8E6E2]" element={<Profile/>}/>
+    <Routes >
+      <Route path='/'  element={<Home/>} />
+      <Route path='/login'   element={<Login/>}/>
+      <Route path='/signup'   element={<Signup/>}/>
+      <Route path="/profile"  element={<Profile/>}/>
     </Routes>
   </BrowserRouter>
-  </AuthContext.Provider>
+  </AuthContext.Provider></ThemeContext.Provider>
   )
     
    

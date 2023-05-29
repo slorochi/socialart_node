@@ -9,6 +9,7 @@ const cookieParser = require('cookie-parser');
 const http = require('http');
 const server = http.createServer(app);
 const io = require("./utils/socket").initialize(server);
+
 app.use('/uploads', express.static('uploads'));
 
 // ...

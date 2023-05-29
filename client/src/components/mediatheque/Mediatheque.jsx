@@ -30,17 +30,11 @@ const dropzoneOptions = {
 function Mediatheque(
   props
 ) {
-  const { selectedFile, setSelectedFile, userFile, urlFileChosen, setUrlFileChosen } = props;
+  const { selectedFile, setSelectedFile, userFile, urlFileChosen, setUrlFileChosen, darkMode } = props;
 
   console.log(userFile);
-  /* const socket = useContext(SocketContext); */
-  const { userAuthenticated } = useContext(AuthContext);
 
   const inputRef = useRef(null)
-
-  console.log(userAuthenticated)
-
-
 
 
   const styleInput = {
@@ -78,16 +72,17 @@ function Mediatheque(
       <div
         onClick={handleCallClickInput}
         className=" h-[50px] rounded-[50px] mb-4"
-      ><div className=" btn-slide2 cursor-pointer" >
-          <span className="circle2 flex items-center justify-center">
+      ><div className={`${darkMode ? 
+      'btn-slide-dark' : 'btn-slide-light'} btn-slide2 cursor-pointer`} >
+          <span className="circle2 text-white flex items-center justify-center">
             <MdDownload size={20} /></span><span className="title2">Upload</span>
           <span className="title-hover2">Click here</span>
         </div>
 
       </div>
-      {urlFileChosen ? <img src={`${urlFileChosen}`} height="200" width={"auto"} alt="Prévisualisation de l'image…" /> : 
-      <img src={`http://localhost:3001/uploads/${userFile?.name}`} height="200" width={"auto"} alt="Prévisualisation de l'image…" /> }
-     
+      {urlFileChosen ? <img src={`${urlFileChosen}`} className="h-[200px] w-auto" height="200" width={"auto"} alt="Prévisualisation de l'image…" /> :
+        <img className="h-[200px] w-auto" src={`http://localhost:3001/uploads/${userFile?.name}`} height="200" width={"auto"} alt="Prévisualisation de l'image…" />}
+
     </>
   );
 }

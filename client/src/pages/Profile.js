@@ -1,15 +1,19 @@
 import React, { useState, useContext, useEffect } from 'react';
+//contexts
 import { AuthContext } from '../contexts/AuthContext';
+import {ThemeContext} from '../contexts/ThemeContext';
+
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { Button, Modal } from 'antd';
 //components
+import CustomModal from '../components/Modal/CustomModal';
 import Mediatheque from '../components/mediatheque/Mediatheque';
-
 const axiosInstance = axios.create({
   withCredentials: true
 })
 const Profile = () => {
+  const {darkMode } = useContext(ThemeContext);
   const { userAuthenticated } = useContext(AuthContext);
   console.log(userAuthenticated);
   const navigate = useNavigate();
@@ -112,8 +116,9 @@ const Profile = () => {
         setIsLoading(false);
       })
     }
-
   }, [changedUserData])
+
+
   return (
     isLoading ?
     <p>loading...</p> :
@@ -128,11 +133,10 @@ const Profile = () => {
       }}><button className="w-[140px] text-sm h-[35px] border-2 relative top-[40px] transition ease-in-out duration-200 border-[#f1f1f18c] rounded-[20px] text-[#f1f1f18c] hover:border-white hover:text-white" onClick={showModal}>
           Modifier
         </button>
-        <Modal title="Modifier votre bannière " open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-          <div className="flex flex-col items-center">
-            <Mediatheque userAuthenticated={userAuthenticated}  urlFileChosen={urlFileChosen} setUrlFileChosen={setUrlFileChosen} userFile={user?.banner} selectedFile={selectedFile} setSelectedFile={setSelectedFile} />
-          </div>
-        </Modal>
+        <CustomModal width={520} height={400} title="Modifier votre bannière" isOpen={isModalOpen} onOk={handleOk} onCancel={handleCancel} darkMode={darkMode}>
+            
+            <Mediatheque urlFileChosen={urlFileChosen} darkMode={darkMode} setUrlFileChosen={setUrlFileChosen} userFile={user?.banner} selectedFile={selectedFile} setSelectedFile={setSelectedFile} />
+        </CustomModal>
         {/* profile pic */}
         <div className="h-36 w-36 relative top-[72px] cursor-pointer scale-100	transition ease-in-out duration-200 hover:scale-105 rounded-[50px]" 
         style={{
@@ -142,11 +146,11 @@ const Profile = () => {
           backgroundSize: "cover",
         }}
         onClick={()=>{setIsModalPpOpen(true)}}></div>
-        <Modal title="Modifier votre image de profil" open={isModalPpOpen} onOk={handlePpOk} onCancel={handlePpCancel}>
-          <div className="flex flex-col items-center">
-            <Mediatheque userAuthenticated={userAuthenticated} urlFileChosen={urlFileChosen} setUrlFileChosen={setUrlFileChosen} userFile={user?.profile_pic} selectedFile={selectedFile} setSelectedFile={setSelectedFile} />
+        <CustomModal width={520} height={400} title="Modifier votre image de profil" isOpen={isModalPpOpen} onOk={handlePpOk} onCancel={handlePpCancel}  darkMode={darkMode}>
+          <div className="flex flex-col items-center ">
+            <Mediatheque userAuthenticated={userAuthenticated} urlFileChosen={urlFileChosen} darkMode={darkMode} setUrlFileChosen={setUrlFileChosen} userFile={user?.profile_pic} selectedFile={selectedFile} setSelectedFile={setSelectedFile} />
           </div>
-        </Modal>
+        </CustomModal>
         </div> 
 
       <p className=" w-full" style={{}}>Bienvenue sur votre profil</p>

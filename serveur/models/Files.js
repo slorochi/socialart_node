@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     })
     Files.associate = (models) => {
         Files.belongsTo(models.Users,{});
-        Files.belongsToMany(models.Posts,{ through:'CommentsLiked'});
+        
 
     }
     return Files;

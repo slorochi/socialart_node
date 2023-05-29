@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import LoginForm from '../components/login/LoginForm';
 import { useNavigate } from 'react-router-dom';
 
+// contexts
 import { AuthContext } from '../contexts/AuthContext';
 
 
@@ -16,7 +17,7 @@ const Login = () => {
     if(userAuthenticated){navigate("/profile")};
    })
   return(
-    <div className="flex flex-col items-center pt-2">
+    <div className="flex flex-col items-center pt-2 ">
       {userAuthenticated ? null : <>
         <h1 className="font-bold text-4xl mb-2">Connexion</h1>
     <LoginForm setTriggerUserConnexion={setTriggerUserConnexion} navigate={navigate}/></>}
