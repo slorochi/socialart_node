@@ -13,8 +13,9 @@ import { AuthContext } from "./contexts/AuthContext";
 //lib decrypt
 import { decrypt } from "./utils/encrypt";
 
-
+//compo 
 import Navbar from "./components/Navbar.jsx";
+import PostUnique from "./pages/PostUnique";
 import Profile from "./pages/Profile"
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -30,21 +31,15 @@ function App(){
     const [triggerUserConnexion, setTriggerUserConnexion] = useState(false);
 
     useEffect(() => {
-      console.log(userAuthenticated);
       axios
         .get(`http://localhost:3001/users/getcookie`, {
           withCredentials: true,
         })
         .then((resp) => {
-          console.log(resp);
           let cookies = resp.data;
-          console.log(cookies);
           const decryptedCookie = decrypt(cookies);
-          console.log(decryptedCookie);
           // recherche l'utilsateur correspondant au cookie
           if (decryptedCookie) {
-            console.log("yess");
-            console.log(decryptedCookie);
             axios
               .get(`http://localhost:3001/users/byEmail/${decryptedCookie.email}`)
               .then((response) => {
@@ -83,6 +78,7 @@ function App(){
     </header> */}
     <Routes >
       <Route path='/'  element={<Home/>} />
+      <Route path="/post/:id"  element={<PostUnique/>}/>
       <Route path='/login'   element={<Login/>}/>
       <Route path='/signup'   element={<Signup/>}/>
       <Route path="/profile"  element={<Profile/>}/>
