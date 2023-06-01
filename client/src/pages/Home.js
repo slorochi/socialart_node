@@ -90,7 +90,7 @@ function Home() {
           
             <div key={value.id} onClick={()=>{handleShowPost(value.id)}}style={{backgroundImage:`url(http://localhost:3001/uploads/${value.File.name}`}} className={`cursor-pointer bg-center bg-no-repeat bg-cover rounded-lg h-52 w-[216px]`}>
               <div className="items-center h-10 flex flex-row relative left-[-10px] top-[-19px]">
-                <div style={{backgroundImage:`url(http://localhost:3001/uploads/${value.User.profile_pic.name}`}} className={`losange rotate-[-10deg] h-12 w-12 bg-center bg-no-repeat bg-cover shadow-[1px_-1px_6px_-1px_rgba(0,0,0,0.3)] z-20 rounded-md`}></div>
+                <div style={{backgroundImage: value.User?.profile_pic?.name ? `url(http://localhost:3001/uploads/${value.User?.profile_pic?.name}`:  `url(${process.env.PUBLIC_URL}/25_04_01.png)`}} className={`losange rotate-[-10deg] h-12 w-12 bg-center bg-no-repeat bg-cover shadow-[1px_-1px_6px_-1px_rgba(0,0,0,0.3)] z-20 rounded-md`}></div>
                 <div className="text-sm text-white relative left-[-10px] bg-[#a56363] h-[20px] w-40 rounded-sm shadow flex justify-center items-center">{value.User.username ? <div>{value.User.username}</div> : <div>utilisateur</div>}</div>
               </div>
             </div>
