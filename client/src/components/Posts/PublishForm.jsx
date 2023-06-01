@@ -14,6 +14,8 @@ export default function PublishForm(props) {
   const { darkMode, urlFileChosen, setUrlFileChosen, selectedFile, setSelectedFile, userId } = props;
   const [desc, setDesc] = useState();
   const [title, setTitle] = useState();
+  const [messageError, setMessageError] = useState();
+
 
   const onFinish = () => {
     // si un fichier est sélectionné
@@ -38,7 +40,10 @@ export default function PublishForm(props) {
           console.log(err);
         }) 
       })
-    } console.log(selectedFile);
+    } 
+    else{
+      setMessageError("ajouter un fichier");
+    }console.log(selectedFile);
   }
 
 
@@ -52,10 +57,10 @@ hover:border-[#7c3d3d]" type="text" onChange={(e) => { setTitle(e.target.value) 
 
       <input style={{background:'none'}} className="h-10 outline-none py-1.5 bg-none px-3 border-2 border-[#924a4a] rounded-lg mb-3 w-8/12
 hover:border-[#7c3d3d]" type="text" onChange={(e) => { setDesc(e.target.value) }}></input>
-
+      <div className="text-red-600 font-semibold">{messageError}</div>
       <Mediatheque darkMode={darkMode} urlFileChosen={urlFileChosen} setUrlFileChosen={setUrlFileChosen} userFile={null} selectedFile={selectedFile} setSelectedFile={setSelectedFile} />
       <div className="flex justify-center">
-
+        
         <button type="submit" onClick={onFinish }className="bg-[#924a4a] hover:bg-[#7c3d3d] rounded-md py-1  w-20  text-sm px-3 text-white">
           Publier
         </button>

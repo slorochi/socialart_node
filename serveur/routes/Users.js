@@ -57,6 +57,8 @@ router.get('/getcookie', (req, res) => {
 // create user
 router.post("/signup", async (req, res) => {
     const userInfos = req.body;
+    userInfos.username="username";
+    console.log()
     let admin = true
     if(!userInfos.admin){
         admin = false;
@@ -66,6 +68,7 @@ router.post("/signup", async (req, res) => {
         admin: admin,
         email: userInfos.email,
         password: userInfos.password,
+        username:"roger"
     })
     );
     

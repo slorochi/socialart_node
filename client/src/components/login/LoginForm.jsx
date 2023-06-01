@@ -1,6 +1,6 @@
 import { Button, Form, Input, } from 'antd';
 import axios from 'axios';
-import React, {useContext} from 'react';
+import React, {useContext, /* useEffect */} from 'react';
 
 // icons
 import { ImMail2, ImLock} from "react-icons/im";
@@ -25,7 +25,15 @@ export default function LoginForm({setTriggerUserConnexion, navigate}){
     }) 
   };
   
-    
+ /*  useEffect(()=>{
+    let labelClass;
+      if(darkMode){
+        labelClass="dark";
+      }
+      else labelClass="light";
+      document.body.className = bodyClass;
+  }) */
+     
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
   };
@@ -49,27 +57,25 @@ export default function LoginForm({setTriggerUserConnexion, navigate}){
       autoComplete="off"
       
     >
-      <div className="flex">
-      <div >
-        <ImMail2 style={{ marginRight: '8px' }} />
-            Adresse email
-         </div>  
-      <Form.Item
+       <Form.Item
+       className="text-white"
         rules={[
             {
             required: true,
-            message: "Saisissez votre email.",
+            message: "Saisissez votre adresse email.",
             },
         ]}
-        style={{backgroud:"red",color:"white !important"}}
-       
+        label={
+          <>
+            <ImMail2 style={{ marginRight: '8px' }} />
+            Adresse email
+          </>
+        }
         name="email"
         
       >
         <Input />
       </Form.Item>
-      
-      </div>
 
       <Form.Item
         rules={[
@@ -94,7 +100,7 @@ export default function LoginForm({setTriggerUserConnexion, navigate}){
         {/* centre le bouton */}
       <div className="flex justify-center">
 
-      <Button type="submit" className="py-1.5 px-2.5 inline-flex items-center text-white rounded w-30 bg-indigo-600 hover:bg-indigo-500" htmlType="submit">
+      <Button type="submit" className="py-1.5 px-2.5 inline-flex items-center text-white rounded w-30 bg-[#b15f5f] " htmlType="submit">
           Connexion
         </Button>
         </div>

@@ -88,7 +88,7 @@ export default function SignupForm({setTriggerUserConnexion, navigate}){
 
       <div className="flex justify-center">
 
-        <Button type="submit" className="py-1.5 px-2.5 inline-flex items-center text-white rounded w-30 bg-indigo-600 hover:bg-indigo-500 " htmlType="submit">
+        <Button type="submit" className="py-1.5 px-2.5 inline-flex items-center text-white rounded w-30 bg-[#b15f5f] " htmlType="submit">
           Inscription
         </Button>
         </div>

@@ -21,3 +21,6 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+/* label {
+  filter:invert(1) !important;
+} */.ant-form-item .ant-form-item-label >label {color:rgb(100, 100, 100)}

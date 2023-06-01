@@ -10,6 +10,8 @@ import { faHome, faHeart, faUser } from '@fortawesome/free-solid-svg-icons';
 // Contexts
 import { ThemeContext } from "./contexts/ThemeContext";
 import { AuthContext } from "./contexts/AuthContext";
+import { PostsContext } from "./contexts/PostsContext";
+
 //lib decrypt
 import { decrypt } from "./utils/encrypt";
 
@@ -27,10 +29,14 @@ library.add(faHome, faHeart, faUser, );
 
 function App(){
     const [darkMode, setDarkMode] = useState(true);
+    const [listOfPosts, setListOfPosts] = useState([]);
+    const [listOfFilteredPosts, setListOfFilteredPosts] = useState([]);
+
     const [userAuthenticated, setUserAuthenticated] = useState(null);
     const [triggerUserConnexion, setTriggerUserConnexion] = useState(false);
 
     useEffect(() => {
+      
       axios
         .get(`http://localhost:3001/users/getcookie`, {
           withCredentials: true,
@@ -50,32 +56,40 @@ function App(){
           }
         });
     }, [triggerUserConnexion]);
-  
+    
+    //posts
+    useEffect(()=>{
+      axios.get("http://localhost:3001/posts").then((response) => {
+      console.log(response.data);
+      setListOfPosts(response.data);
+       setListOfFilteredPosts(response.data);
+     });
+
+    },[darkMode])  
+
     //dark mode
     useEffect(()=>{
       let bodyClass;
+      let labelClass;
       if(darkMode){
         bodyClass="dark";
+        labelClass="darkLabel";
       }
-      else bodyClass="light";
+      else {bodyClass="light"
+        labelClass="lightLabel"};
       document.body.className = bodyClass;
+      /* document.label.className = labelClass; */
 
     },[darkMode])  
 
    
   return (
     <ThemeContext.Provider value={{darkMode, setDarkMode}}>
+      <PostsContext.Provider value={{listOfPosts, setListOfPosts, listOfFilteredPosts, setListOfFilteredPosts}}>
     <AuthContext.Provider value={{ userAuthenticated, setUserAuthenticated, triggerUserConnexion, setTriggerUserConnexion}}>
     <BrowserRouter className="">
       <Navbar />
-     {/*  <header className="h-[60px] w-screen px-10 flex items-center justify-between">
-    <Link className="font-semibold text-zinc-600	 text-4xl h-10  mb-0" to='/'>Social Art</Link>
-    <input type="search" placeholder="Rechercher" className="searchInput" onChange={(e)=>{handleSearch(e)}}/>
-      { !userAuthenticated ?     <div className=" font-bold flex">
-<Link to='login' className="py-1.5 px-2.5 text-white h-10 rounded w-30 bg-indigo-600 flex items-center hover:bg-indigo-700"><FontAwesomeIcon className="mr-2" icon="user"/>Connexion</Link>
-      <Link to='signup' className="py-1.5 px-2.5  rounded w-30 text-indigo-600 flex items-center">Inscription</Link></div>
-    :  <Link to='signout' className="py-1.5 px-2.5 text-white rounded w-30 bg-indigo-600 flex items-center hover:bg-indigo-700"><FontAwesomeIcon className="mr-2" icon="user"/>Déconnexion</Link>}
-    </header> */}
+
     <Routes >
       <Route path='/'  element={<Home/>} />
       <Route path="/post/:id"  element={<PostUnique/>}/>
@@ -84,7 +98,7 @@ function App(){
       <Route path="/profile"  element={<Profile/>}/>
     </Routes>
   </BrowserRouter>
-  </AuthContext.Provider></ThemeContext.Provider>
+  </AuthContext.Provider></PostsContext.Provider></ThemeContext.Provider>
   )
     
    

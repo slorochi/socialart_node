@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react'
 import axios from "axios";
 import {AuthContext} from '../contexts/AuthContext';
 import {ThemeContext} from '../contexts/ThemeContext';
+import {PostsContext} from "../contexts/PostsContext";
 import {useNavigate} from "react-router-dom"
 
 //components
@@ -13,8 +14,8 @@ function Home() {
   const navigate = useNavigate();
   const {darkMode} = useContext(ThemeContext);
   const {userAuthenticated} = useContext(AuthContext);
-
-  const [listOfPosts, setListOfPosts] = useState([]);
+  const {listOfFilteredPosts} = useContext(PostsContext);
+  console.log(listOfFilteredPosts);
   const [isLoading, setIsLoading] = useState(true);
   // pour afficher le media sélectionné dans mediatheque
   const [urlFileChosen, setUrlFileChosen] = useState();
@@ -26,10 +27,7 @@ function Home() {
   useEffect(() => {
     console.log(userAuthenticated);
 
-    axios.get("http://localhost:3001/posts").then((response) => {
-      console.log(response.data);
-      setListOfPosts(response.data);
-    });
+    
       if (userAuthenticated) {
         console.log(userAuthenticated.email);
         axios.get(`http://localhost:3001/users//byEmail/${userAuthenticated.email}`).then((response) => {
@@ -83,17 +81,17 @@ function Home() {
     
 
     {
-      listOfPosts.length === 0 ?
+      listOfFilteredPosts?.length === 0 ?
         <tr>
           <td >no records found</td>
         </tr>
-        : listOfPosts.map((value) => {
+        : listOfFilteredPosts.map((value) => {
           return(
           
             <div key={value.id} onClick={()=>{handleShowPost(value.id)}}style={{backgroundImage:`url(http://localhost:3001/uploads/${value.File.name}`}} className={`cursor-pointer bg-center bg-no-repeat bg-cover rounded-lg h-52 w-[216px]`}>
               <div className="items-center h-10 flex flex-row relative left-[-10px] top-[-19px]">
                 <div style={{backgroundImage:`url(http://localhost:3001/uploads/${value.User.profile_pic.name}`}} className={`losange rotate-[-10deg] h-12 w-12 bg-center bg-no-repeat bg-cover shadow-[1px_-1px_6px_-1px_rgba(0,0,0,0.3)] z-20 rounded-md`}></div>
-                <div className="text-sm text-white relative left-[-10px] bg-[#a56363] h-[20px] w-40 rounded-sm shadow flex justify-center items-center">{value.User.username ? <div></div> : <div>utilisateur</div>}</div>
+                <div className="text-sm text-white relative left-[-10px] bg-[#a56363] h-[20px] w-40 rounded-sm shadow flex justify-center items-center">{value.User.username ? <div>{value.User.username}</div> : <div>utilisateur</div>}</div>
               </div>
             </div>
 
