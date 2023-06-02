@@ -30,7 +30,7 @@ function Home() {
     
       if (userAuthenticated) {
         console.log(userAuthenticated.email);
-        axios.get(`http://localhost:3001/users//byEmail/${userAuthenticated.email}`).then((response) => {
+        axios.get(`http://localhost:3001/users/byEmail/${userAuthenticated.email}`).then((response) => {
           console.log(response.data);
           console.log(response.data.id);
           setUser(response.data);

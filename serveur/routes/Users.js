@@ -16,7 +16,7 @@ const generateAccessToken = (user) => {
 };
 
 
-const { Users, Files } = require("../models");
+const { Users, Files, Posts } = require("../models");
 
 /* get users */
 router.get("/", async (req, res) => {
@@ -39,6 +39,12 @@ router.get("/byEmail/:mail", async (req, res) => {
               model: Files,
               as: "profile_pic",
             },
+            {
+                model:Posts,
+                include: [
+                    {model:Files}
+                ]
+            }
           ],
 
         // include files pour sa profile pic

@@ -11,7 +11,7 @@ router.get("/",async (req,res)=>{
 router.post("/", async(req,res)=>{
     const comments = req.body;
     await Comments.create(comments);
-    res.status(200).json("create file");
+    res.status(200).json("create comment");
 });
 
 //modify comment

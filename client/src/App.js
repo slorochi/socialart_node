@@ -65,7 +65,7 @@ function App(){
        setListOfFilteredPosts(response.data);
      });
 
-    },[darkMode])  
+    },[])  
 
     //dark mode
     useEffect(()=>{

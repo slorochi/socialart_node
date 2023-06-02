@@ -12,10 +12,11 @@ body {
 }
 .dark{
   background:#23252b;
-  color:rgb(65, 67, 73);
+  color:#c4c6cc;
 }
 .light{
   background: #faf5ed;
+  color:#3f434d;
 }
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
