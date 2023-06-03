@@ -74,7 +74,7 @@ router.post("/signup", async (req, res) => {
         admin: admin,
         email: userInfos.email,
         password: userInfos.password,
-        username:"roger"
+        username:"utilisateur"
     })
     );
     
@@ -136,6 +136,7 @@ router.post("/login", async (req, res) => {
 //modify user infos
 router.put("/:id",  async (req, res) => {
     const user = req.body;
+
     console.log(user);
     const id = req.params.id;
     console.log(id);

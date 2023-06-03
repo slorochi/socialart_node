@@ -73,7 +73,7 @@ function PostUnique() {
                         {/* cont commentaires */}
                         <div className={`${darkMode ? 'bg-[#23252b]' : 'bg-[#faf5ed]'} flex flex-col overflow-auto w-3/12 p-3`}>
                             <div className="flex items-center justify-start">
-                                <div className="h-20 w-20 rounded-[20px] mr-2" style={{ backgroundImage: `url(http://localhost:3001/uploads/${post.User.profile_pic.name})`, backgroundPosition: "center", backgroundRepeat: "no-repeat", backgroundSize: "cover" }}></div>
+                                <div className="h-20 w-20 rounded-[20px] mr-2" style={{ backgroundImage: post.User.profile_pic ? `url(http://localhost:3001/uploads/${post.User.profile_pic.name})` : `url(${process.env.PUBLIC_URL}/25_04_01.png)`, backgroundPosition: "center", backgroundRepeat: "no-repeat", backgroundSize: "cover" }}></div>
                                 <span className={`${darkMode ? 'text-white' : 'text-[#46474e]'} text-xl font-semibold`}>{post.User.username} test </span>
                             </div>
                             {/*  */}
@@ -87,7 +87,7 @@ function PostUnique() {
                             <div>
                                 {user ?
                                     <div className="flex min-h-20 h-auto items-center w-full">
-                                        <div className="h-12 w-12 rounded-[14px] mr-2" style={{ backgroundImage: `url(http://localhost:3001/uploads/${user.profile_pic.name})`, backgroundPosition: "center", backgroundRepeat: "no-repeat", backgroundSize: "cover" }}>
+                                        <div className="h-12 w-12 rounded-[14px] mr-2" style={{ backgroundImage: user.profile_pic ? `url(http://localhost:3001/uploads/${user.profile_pic.name})` : `url(${process.env.PUBLIC_URL}/25_04_01.png)`, backgroundPosition: "center", backgroundRepeat: "no-repeat", backgroundSize: "cover" }}>
                                         </div>
                                         <div style={{ width: " calc(100% - 56px)" }} className="h-full flex justify-between items-center">
                                             <textarea ref={commentRef} style={{ width: "calc(100% - 100px)", height: "auto", overflowWrap: "break-word" }}
@@ -100,7 +100,7 @@ function PostUnique() {
                                 {post.Comments.slice(0, 20).map((comment) => {
                                     return (
                                         <><div key={comment.id} className="flex min-h-20 h-auto items-center w-full">
-                                            <div className="h-10 w-10 rounded-[20px] mr-2" style={{ backgroundImage: `url(http://localhost:3001/uploads/${comment.User.profile_pic.name})`, backgroundPosition: "center", backgroundRepeat: "no-repeat", backgroundSize: "cover" }}>
+                                            <div className="h-10 w-10 rounded-[20px] mr-2" style={{ backgroundImage: comment.User.profile_pic ? `url(http://localhost:3001/uploads/${comment.User.profile_pic.name})` : `url(${process.env.PUBLIC_URL}/25_04_01.png)`, backgroundPosition: "center", backgroundRepeat: "no-repeat", backgroundSize: "cover" }}>
                                             </div>
                                             <div style={{ width: " calc(100% - 56px)" }} className="h-full flex flex-col ">
                                                 <p className="text-[#65676d] break-words">{comment.User.username ? comment.User.username : "utilisateur"}</p>
