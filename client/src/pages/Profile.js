@@ -152,8 +152,8 @@ const Profile = () => {
           </div>
         </CustomModal>
         </div> 
-
-      <p className=" w-full" style={{}}>Bienvenue sur votre profil</p>
+  <div className="flex flex-col justify-center"><p className=" w-full" style={{}}>Bienvenue sur votre profil</p></div>
+      
 
     </div>
   );
