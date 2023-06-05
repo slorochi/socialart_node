@@ -1,9 +1,10 @@
 {
   "development": {
     "username": "root",
-    "password": "Ibo@t8KqeztXXT",
+    "password": "root",
     "database": "socialart_node",
     "host": "127.0.0.1",
+    "logging": false,
     "dialect": "mysql"
 
   },
